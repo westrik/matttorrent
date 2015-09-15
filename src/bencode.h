@@ -8,19 +8,18 @@
  * Data structure declarations
  * ======================================== */
 
+struct _b_dict; // forward declaration
+
 /**
  * Union of possible element types
  */
 union b_dict_el
 {
-    struct _b_dict d;
+    struct _b_dict* d;
     char* c;
     int64_t i;
-}
+};
 typedef enum {DICT, STRING, INT} b_dict_el_t;
-
-    /* Forward declaration for b_dict */
-    struct _b_dict;
 
 /**
  * Bencoded item
@@ -43,11 +42,12 @@ typedef struct _b_dict
 b_dict;
 
 
+
 /* ========================================
  * Function declarations
  * ======================================== */
 
-b_dictionary bencode_parse(FILE* input);
+b_dict bencode_parse(FILE* input);
 
 
 
