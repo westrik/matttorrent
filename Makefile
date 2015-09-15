@@ -8,7 +8,7 @@ OBJ=bencode.o main.o
 OBJ_OUT = $(addprefix $(OBJ_D)/,$(OBJ))
 
 BIN = matttorrent
-TESTFILE = test.torrent
+TESTFILE = test/test.torrent
 
 .SUFFIXES: .c 
 .PHONY: clean
