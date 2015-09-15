@@ -1,14 +1,19 @@
 CC=gcc
 CFLAGS= -Wall -pedantic -g -Iinclude
+
 SRC_D=src
 OBJ_D=obj
-OBJ=main.o
-OUT = mwtorrent
+
+OBJ=bencode.o main.o
+OBJ_OUT = $(addprefix $(OBJ_D)/,$(OBJ))
+
+BIN = mwtorrent
+TESTFILE = test.torrent
 
 .SUFFIXES: .c 
 .PHONY: clean
 
-all: $(OUT)
+all: $(BIN)
 
 $(OBJ_D):
 	mkdir $(OBJ_D)
@@ -16,8 +21,11 @@ $(OBJ_D):
 %.o: $(OBJ_D) $(SRC_D)/%.c
 	$(CC) $(CFLAGS) -c $(SRC_D)/$*.c -o $(OBJ_D)/$@
 
-$(OUT) : $(OBJ)
-	$(CC) -o $(OUT) $(OBJ_)
+$(BIN) : $(OBJ)
+	$(CC) -o $(BIN) $(OBJ_OUT)
 
 clean:
+	rm -rf $(OBJ_OUT) $(BIN)
+
 run: all
+	./mwtorrent $(TESTFILE)

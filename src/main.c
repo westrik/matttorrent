@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "bencode.h"
+
 int main(int argc, char**argv)
 {
     FILE *torrentfile = NULL;
 
     if (argc == 2)
     {
-        torrentfile = fopen(argv[1],'r');
+        torrentfile = fopen(argv[1],"r");
         if (!torrentfile)
         {
             printf("Could not open '%s'", argv[1]);
@@ -19,8 +21,7 @@ int main(int argc, char**argv)
     }
 
     // Initialize 
-    ParseTorrentFile(torrentfile);
-
+    parse_torrent_file(torrentfile);
     fclose(torrentfile);
 
     // Get peers from tracker
