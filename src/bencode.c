@@ -5,7 +5,12 @@
 
 #include "bencode.h"
 
-int parse_torrent_file(FILE *input)
+/**
+ * Parse bencoded files
+ * @param   FILE* input input file to be parsed
+ * @return  b_dict
+ */
+b_dict bencode_parse(FILE* input)
 {
     char buffer[BUFFER_SIZE];
 
@@ -15,6 +20,4 @@ int parse_torrent_file(FILE *input)
         printf("%s\n\n",buffer);
         if (n < BUFFER_SIZE) { break; }
     }
-
-    return 0;
 }

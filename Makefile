@@ -4,7 +4,10 @@ CFLAGS= -Wall -pedantic -g -Iinclude
 SRC_D=src
 OBJ_D=obj
 
-OBJ=bencode.o main.o
+OBJ= torrent.o      \
+	 bencode.o      \
+	 matttorrent.o
+
 OBJ_OUT = $(addprefix $(OBJ_D)/,$(OBJ))
 
 BIN = matttorrent
@@ -28,4 +31,4 @@ clean:
 	rm -rf $(OBJ_OUT) $(BIN)
 
 run: all
-	./mwtorrent $(TESTFILE)
+	./$(BIN) $(TESTFILE)

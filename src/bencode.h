@@ -1,11 +1,56 @@
-#ifndef MWTORRENT_BENCODE_H
-#define MWTORRENT_BENCODE_H
+#ifndef MA3T_BENCODE_H
+#define MA3T_BENCODE_H
 
-#define BUFFER_SIZE 20
-
-int parse_torrent_file(FILE *input);
+#define BUFFER_SIZE 256
 
 
+/* ========================================
+ * Data structure declarations
+ * ======================================== */
+
+/**
+ * Union of possible element types
+ */
+union b_dict_el
+{
+    struct _b_dict d;
+    char* c;
+    int64_t i;
+}
+typedef enum {DICT, STRING, INT} b_dict_el_t;
+
+    /* Forward declaration for b_dict */
+    struct _b_dict;
+
+/**
+ * Bencoded item
+ */
+typedef struct _b_dict_element
+{
+    b_dict_el_t type;
+    union b_dict_el element; 
+}
+b_dict_element;
+
+/**
+ * Hashmap containing bencoded items
+ */
+typedef struct _b_dict
+{
+    unsigned int size;
+    b_dict_element** map;
+}
+b_dict;
 
 
-#endif  //MWTORRENT_BENCODE_H
+/* ========================================
+ * Function declarations
+ * ======================================== */
+
+b_dictionary bencode_parse(FILE* input);
+
+
+
+
+
+#endif //MA3T_BENCODE_H

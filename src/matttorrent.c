@@ -3,7 +3,7 @@
 
 #include "bencode.h"
 
-int main(int argc, char**argv)
+int main(int argc, char** argv)
 {
     FILE *torrentfile = NULL;
 
@@ -21,7 +21,7 @@ int main(int argc, char**argv)
     }
 
     // Initialize 
-    parse_torrent_file(torrentfile);
+    bencode_parse(torrentfile);
     fclose(torrentfile);
 
     // Get peers from tracker
