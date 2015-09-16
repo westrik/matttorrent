@@ -3,6 +3,7 @@
 
 #define BUFFER_SIZE 256
 
+typedef enum {false, true} bool;
 
 /* ========================================
  * Data structure declarations
@@ -26,8 +27,11 @@ typedef enum {DICT, STRING, INT} b_dict_el_t;
  */
 typedef struct _b_dict_element
 {
+    char* key;
     b_dict_el_t type;
     union b_dict_el element; 
+
+    struct _b_dict_element* next;
 }
 b_dict_element;
 
@@ -47,7 +51,15 @@ b_dict;
  * Function declarations
  * ======================================== */
 
-b_dict bencode_parse(FILE* input);
+b_dict* bencode_parse(FILE* input);
+
+b_dict* dict_init(unsigned int size);
+
+bool dict_insert(b_dict* dict, b_dict_element* el);
+
+int dict_key_hash(char* key, int dict_size);
+
+bool dict_fill_slot(b_dict_element* el, b_dict_element** map_el);
 
 
 
