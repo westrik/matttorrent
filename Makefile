@@ -13,7 +13,7 @@ OBJ_OUT = $(addprefix $(OBJ_D)/,$(OBJ))
 BIN = matttorrent
 TESTFILE = test/test.torrent
 
-.SUFFIXES: .c 
+.SUFFIXES: .c
 .PHONY: clean
 
 all: $(BIN)

@@ -22,7 +22,6 @@ b_dict* bencode_parse(FILE* input)
 
         for (i=0;i<BUFFER_SIZE;i++)
         {
-        printf("%c\n",buffer[i]);
         }
         if (n < BUFFER_SIZE) { break; }
     }
@@ -32,7 +31,7 @@ b_dict* bencode_parse(FILE* input)
 
 /**
  * Initialize bencode dictionary
- * @param int size: size of key array 
+ * @param int size: size of key array
  *        (can be smaller than number of total elements)
  * @return b_dict*: new dict or NULL (malloc failure)
  */
@@ -59,11 +58,11 @@ b_dict* dict_init(unsigned int size)
     }
 
     dict->size = size;
-    
+
     return dict;
 }
 
-/** 
+/**
  * Insert element into dictionary
  * @param b_dict* dict: dictionary
  * @param b_dict_element* el: element to be inserted
@@ -71,13 +70,13 @@ b_dict* dict_init(unsigned int size)
  */
 bool dict_insert(b_dict* dict, b_dict_element* el)
 {
-    int index; 
+    int index;
 
     if (NULL == dict || NULL == el)
     {
         return false;
     }
-    
+
     index = dict_key_hash(el->key, dict->size);
     if (index < 0)
     {
@@ -86,12 +85,12 @@ bool dict_insert(b_dict* dict, b_dict_element* el)
 
     // recursively add element
     dict_fill_slot(el, &dict->map[index]);
-    
+
     return true;
 }
 
 
-/** 
+/**
  * Add element to dictionary slot recursively
  * @param b_dict_element* el: element to be added
  * @param b_dict_element** map_el: dict slot
@@ -140,3 +139,20 @@ int dict_key_hash(char* key, int dict_size)
     return (sum % dict_size);
 }
 
+/**
+ * Find element
+ * @param b_dict* dictionary to search in
+ * @param char* key of element
+ * @return b_dict_element*
+ */
+b_dict_element* dict_find_element(b_dict* dict, char* key)
+{
+    int index;
+
+    if (NULL==dict||NULL==key)
+    {
+        return NULL;
+    }
+
+    index = dict_key_hash(key, dict->size);
+}

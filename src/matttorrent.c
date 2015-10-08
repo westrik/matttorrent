@@ -20,7 +20,7 @@ int main(int argc, char** argv)
         printf("Usage: %s torrent_file", argv[0]);
     }
 
-    // Initialize 
+    // Initialize
     bencode_parse(torrentfile);
     fclose(torrentfile);
 
