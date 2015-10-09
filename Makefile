@@ -1,4 +1,4 @@
-CC=gcc
+CC=clang
 CFLAGS= -Wall -pedantic -g -Iinclude
 
 SRC_D=src
