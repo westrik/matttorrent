@@ -2,6 +2,7 @@
 #define MA3T_BENCODE_H
 
 #define BUFFER_SIZE 256
+#include <stdint.h>
 
 typedef enum {false, true} bool;
 
@@ -64,3 +65,4 @@ bool dict_fill_slot(b_dict_element* el, b_dict_element** map_el);
 b_dict_element* dict_find_element(b_dict* dict, char* key);
 
 #endif //MA3T_BENCODE_H
+
