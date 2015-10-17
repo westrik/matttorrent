@@ -3,6 +3,31 @@
 [![Build
 Status](https://travis-ci.org/mattwestrik/matttorrent.svg?branch=master)](https://travis-ci.org/mattwestrik/matttorrent)
 
+## About
+
+`matttorrent` is a rudimentary BitTorrent client I'm writing to get better at
+systems code (multi-threading, event-driven programming, networking, etc.).
+
+Tested on OS X 10.11 and Ubuntu 12.04.
+
+
+## Build
+
+Compile:
+````
+make
+````
+
+Run tests:
+````
+make test
+````
+
+Run:
+````
+./matttorrent data/test.torrent
+````
+
 
 ## Task list
 
