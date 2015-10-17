@@ -17,7 +17,7 @@ TARGET_OUT = $(addprefix $(OBJ_D)/,$(TARGET))
 TEST_OUT = $(addprefix $(OBJ_D)/,$(TEST))
 
 BIN = matttorrent
-TEST_BIN = ma3t_test
+TEST_BIN = test
 TESTFILE = data/test.torrent
 
 .SUFFIXES: .c

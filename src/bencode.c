@@ -155,4 +155,5 @@ b_dict_element* dict_find_element(b_dict* dict, char* key)
     }
 
     index = dict_key_hash(key, dict->size);
+
 }
