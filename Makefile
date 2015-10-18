@@ -6,7 +6,8 @@ OBJ_D=obj
 
 COMMON=                                                                       \
 	torrent.o                                                                 \
-	bencode.o
+	bencode.o                                                                 \
+	dict.o
 TARGET=                                                                       \
 	matttorrent.o
 TEST=                                                                         \

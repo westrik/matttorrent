@@ -1,4 +1,5 @@
 obj/
 *.o
 matttorrent
+test
 .DS_Store

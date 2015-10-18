@@ -31,9 +31,9 @@ Run:
 
 ## Task list
 
-- [ ] dictionary ADT for bencoded data
+- [x] dictionary ADT for bencoded data
 - [ ] parse bencode
-- [ ] parse bencode file
+- [ ] parse torrent file
 - [ ] connect to tracker, parse bencoded response
 - [ ] connect to peers
   - [ ] handshake 
