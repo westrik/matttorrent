@@ -1,5 +1,5 @@
 CC=clang
-CFLAGS= -Wall -pedantic -g -Iinclude
+CFLAGS= -Wall -pedantic -g
 
 SRC_D=src
 OBJ_D=obj
