@@ -2,10 +2,13 @@
 #include <stdlib.h>
 
 #include "bencode.h"
+#include "torrent.h"
 
 int main(int argc, char** argv)
 {
     FILE *torrentfile = NULL;
+    b_dict *metainfo = NULL,
+           *tracker_response = NULL;
 
     if (argc == 2)
     {
@@ -21,10 +24,12 @@ int main(int argc, char** argv)
     }
 
     // Initialize
-    bencode_parse(torrentfile);
-    fclose(torrentfile);
+    metainfo = parse_torrent_file(torrentfile);
+
 
     // Get peers from tracker
+    tracker_response = tracker_request(metainfo, torrentfile);
+    fclose(torrentfile);
 
     // Connect to peers, start downloading
         // verify each block

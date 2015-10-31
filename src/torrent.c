@@ -1,4 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "torrent.h"
+
 
 /* Notes about tracker params
  *
@@ -18,14 +22,25 @@
  * supportcrypto: support crypto? (not for time being -> 0)
  */
 
-/**
- * Connect to tracker, get peers, parse response
- *
- * @param b_dict* torrent metainfo dictionary
+
+/*
+ * Decode bencoded torrent file
+ * @param FILE* torrent: file pointer of bencoded torrent file
  */
-b_dict* tracker_request()
+b_dict* parse_torrent_file(FILE* torrent)
 {
-    
+
 }
 
 
+
+/**
+ * Connect to tracker, get peers, parse response
+ *
+ * @param b_dict* metainfo: torrent metainfo dictionary
+ * @param FILE* torrent: original file pointer (needed to calculate SHA1 hash of info dict)
+ */
+b_dict* tracker_request(b_dict* metainfo, FILE* torrent)
+{
+
+}
