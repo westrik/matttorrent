@@ -5,10 +5,12 @@ Status](https://travis-ci.org/mattwestrik/matttorrent.svg?branch=master)](https:
 
 ## About
 
-`matttorrent` is a rudimentary BitTorrent client I'm writing to get better at
-systems code (multi-threading, event-driven programming, networking, etc.).
+`matttorrent` is a rudimentary BitTorrent client I'm working on to get better at 
+writing systems code (multi-threading, event-driven programming, networking,
+etc.).
 
-Tested on OS X 10.11 and Ubuntu 12.04.
+Not currently functional.
+Testing on OS X 10.11 and Ubuntu 12.04.
 
 
 ## Build
