@@ -15,12 +15,12 @@ int main(int argc, char** argv)
         torrentfile = fopen(argv[1],"r");
         if (!torrentfile)
         {
-            printf("Could not open '%s'", argv[1]);
+            printf("Could not open '%s'\n", argv[1]);
         }
     }
     else
     {
-        printf("Usage: %s torrent_file", argv[0]);
+        printf("Usage: %s torrent_file\n", argv[0]);
     }
 
     // Initialize

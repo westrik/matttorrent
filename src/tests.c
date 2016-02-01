@@ -7,7 +7,6 @@
 
 #define log(X) printf(X);fflush(stdout);
 
-
 /** 
  * Tests for 
  * DICTIONARY ADT 
@@ -107,8 +106,9 @@ void test_dict_insert(b_dict *dict)
 }
 void test_dict_find(b_dict *dict)
 {
-    log("- Retrieve previously inserted elements from dict: ");
     b_dict_element* el;
+
+    log("- Retrieve previously inserted elements from dict: ");
 
     el = dict_find(dict, "Test");
     assert(el!=NULL);
@@ -140,11 +140,30 @@ void dict_tests()
     test_dict_insert(dict);
     test_dict_find(dict);
     test_dict_destroy(dict);
+    log("\n\n");
 }
 
 
+/** 
+ * Tests for 
+ * BENCODING PARSER 
+ *
+ * bencode.c
+ */
 
+void bencode_tests()
+{
+    log("Bencoding parser\n");
 
+    char* test_dict = malloc(sizeof(char)*25);
+    strcpy(test_dict, "d3:cow3:moo4:spam4:eggse\0");
+
+    b_dict* result = parse_bencode_dict(test_dict);
+    free(test_dict);
+
+    assert(result);
+    log("\n\n");
+}
 
 
 
@@ -158,7 +177,8 @@ int main()
     log("\n");
 
     dict_tests();
+    bencode_tests();
 
-    log("\n\n---- All tests passed ----\n");
+    log("---- All tests passed ----\n");
     return 0;
 }

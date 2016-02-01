@@ -5,13 +5,12 @@
 #include "dict.h"
 
 /* ========================================
- * Data structure declarations
- * ======================================== */
-
-/* ========================================
  * Function declarations
  * ======================================== */
 
-b_dict* bencode_parse(FILE* input);
+b_dict* parse_bencode_dict(char* input);
+
+b_dict* __parse_dict (char* input, int* position);
+
 
 #endif //MA3T_BENCODE_H
