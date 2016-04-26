@@ -1,5 +1,4 @@
-#ifndef MA3T_TORRENT_H
-#define MA3T_TORRENT_H
+#pragma once
 
 #include "dict.h"
 
@@ -8,4 +7,3 @@ b_dict* tracker_request(b_dict* metainfo, FILE* torrent);
 
 
 
-#endif //MA3T_TORRENT_H

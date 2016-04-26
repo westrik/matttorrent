@@ -1,5 +1,4 @@
-#ifndef MA3T_DICT_H
-#define MA3T_DICT_H
+#pragma once
 
 #include <stdint.h>
 typedef enum {false, true} bool;
@@ -63,6 +62,3 @@ b_dict_element* dict_find(b_dict* dict, char* key);
 b_dict* dict_destroy(b_dict* dict);
 
 void __free_linked_list(b_dict_element* el);
-
-
-#endif //MA3T_DICT_H

@@ -1,5 +1,4 @@
-#ifndef MA3T_BENCODE_H
-#define MA3T_BENCODE_H
+#pragma once
 
 #define BUFFER_SIZE 256
 #include "dict.h"
@@ -13,4 +12,3 @@ b_dict* parse_bencode_dict(char* input);
 b_dict* __parse_dict (char* input, int* position);
 
 
-#endif //MA3T_BENCODE_H
