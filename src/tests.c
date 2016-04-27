@@ -152,9 +152,9 @@ void dict_tests()
  * bencode.c
  */
 
-void bencode_tests()
+void basic_bencode_dict()
 {
-    log("Bencoding parser\n");
+    log("- Basic bencoded data (with strs) can be parsed: ");
 
     char* test_dict = malloc(sizeof(char)*25);
     strcpy(test_dict, "d3:cow3:moo4:spam4:eggse\0");
@@ -163,6 +163,67 @@ void bencode_tests()
     free(test_dict);
 
     assert(result);
+    log("pass\n");
+}
+
+void basic_bencode_dict_2()
+{
+    log("- Basic bencoded data (with ints) can be parsed: ");
+
+    char* test_dict = malloc(sizeof(char)*25);
+    strcpy(test_dict, "d3:cowi64e4:spami32ee\0");
+
+    b_dict* result = parse_bencode_dict(test_dict);
+    free(test_dict);
+
+    assert(result);
+    log("pass\n");
+}
+
+void adv_bencode_dict()
+{
+    log("- Bencoded data with nested lists/dicts::\n");
+
+    char* test_dict = malloc(sizeof(char)*100);
+    strcpy(test_dict, "d4:dictd3:moo4:spame4:listl4:spamee\0");
+
+    b_dict* result = parse_bencode_dict(test_dict);
+
+    b_dict_element *x, *y;
+    x = dict_find(result, "dict");
+    log(" - dict not null\n");
+    assert(x!=NULL);
+    log(" - dict is dict\n");
+    assert(get_data_type(x->type) == "DICT");
+
+        y = dict_find(result, "moo");
+        log("  - child of dict is not null\n");
+        assert(y!=NULL);
+        log("  - child of dict is string\n");
+        assert(get_data_type(y->type) == "STRING");
+
+    x = dict_find(result, "list");
+    log(" - list is not null\n");
+    assert(x!=NULL);
+    log(" - list is list\n");
+    assert(get_data_type(x->type) == "LIST");
+
+
+    free(test_dict);
+
+    assert(result);
+
+    log(":: all pass\n\n");
+}
+
+void bencode_tests()
+{
+    log("Bencoding parser\n");
+
+    basic_bencode_dict();
+    basic_bencode_dict_2();
+    adv_bencode_dict();
+
     log("\n\n");
 }
 

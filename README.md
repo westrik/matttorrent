@@ -1,7 +1,7 @@
 # matttorrent
 
 [![Build
-Status](https://travis-ci.org/westrik/matttorrent.svg?branch=master)](https://travis-ci.org/mattwestrik/matttorrent)
+Status](https://travis-ci.org/westrik/matttorrent.svg?branch=master)](https://travis-ci.org/westrik/matttorrent)
 
 ## About
 

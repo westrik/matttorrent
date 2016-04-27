@@ -64,3 +64,5 @@ b_dict_element* dict_find(b_dict* dict, char* key);
 b_dict* dict_destroy(b_dict* dict);
 
 void __free_linked_list(b_dict_element* el);
+
+const char* get_data_type(b_dict_el_t t);

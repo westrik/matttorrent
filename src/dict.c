@@ -107,7 +107,8 @@ b_dict_element* dict_find(b_dict* dict, char* key)
 
     index = __dict_key_hash(key, dict->size);
 
-    current = &dict->map[index];
+    current = &(dict->map[index]);
+
     while (true)
     {
         if (*current == NULL)
@@ -202,4 +203,26 @@ int __dict_key_hash(char* key, int dict_size)
         sum += (int)key[i];
     }
     return (sum % dict_size);
+}
+
+
+/**
+ * Return string representation of enum data type
+ * @return const char*
+ */
+const char* get_data_type(b_dict_el_t t)
+{
+    switch (t) 
+    {
+        case DICT:      
+            return "DICT";  
+        case STRING:    
+            return "STRING"; 
+        case INT:       
+            return "INT";   
+        case LIST:      
+            return "LIST";
+        default:
+            return "UNIMPL";
+    }
 }

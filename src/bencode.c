@@ -33,7 +33,7 @@ b_dict* parse_bencode_dict(char* input)
     return result;
 }
 
-/* 
+/**
  * Parse a dictionary
  * @return b_dict Resulting dictionary
  */
@@ -42,7 +42,7 @@ b_dict* __parse_dict (char* input, int* position)
     // Iterate over input string, parsing element keys then elements
     // and inserting those into our dict adt
  
-    b_dict* result = calloc(1,sizeof(b_dict));
+    b_dict* result = dict_init(16);
 
     char* key = 0;
     bool parsing_element = false;
@@ -70,6 +70,7 @@ b_dict* __parse_dict (char* input, int* position)
         else if (input[*position] == 'd')
         {
             // Element: dictionary
+            (*position)++;
             el.d = __parse_dict(input, position);
             el_type = DICT;
         }
@@ -82,14 +83,11 @@ b_dict* __parse_dict (char* input, int* position)
         else if (input[*position] == 'l')
         {
             // Element: list
+            (*position)++;
             el.l = __parse_list(input, position);
             el_type = LIST;
         }
-        else if (input[*position] == 'e')
-        {
-            printf("END\n"); 
-        }
-        else
+        else if (input[*position] != 'e')
         {
             printf("%d\n",*position);
             printf("%c\n",input[*position]);
@@ -114,7 +112,12 @@ b_dict* __parse_dict (char* input, int* position)
     return result;
 }
 
-int __parse_int (char* input, int* position)
+
+/**
+ * Parse a string as a 64-bit base 10 integer 
+ * @return int64_t 
+ */
+int64_t __parse_int (char* input, int* position)
 {
     // int format: i<integer>e
     // iterate from i to e, parse what's in between as base10 int
@@ -139,10 +142,15 @@ int __parse_int (char* input, int* position)
     }
     buffer[i] = '\0';
 
-    return atoi(buffer);
+    return strtoll(buffer, NULL, 10);
 
 }
 
+
+/**
+ * Parse a string as a string
+ * @return char*
+ */
 char* __parse_string (char* input, int* position)
 {
     // str format: <string length b10 ascii>:<string>
@@ -180,26 +188,32 @@ char* __parse_string (char* input, int* position)
     }
 
     // then iterate over actual string
-    i = 0;
-    while (i < string_len)
+    // advance position from ':'
+
+    for (i = 0; i < string_len; i++)
     {
-        buffer[i] = input[*position];
-        
-        if (++i == 2048)
+        (*position)++;
+
+        if (i == 2048)
         {
             ERR("Integer length exceeds buffer size");
         }
-        (*position)++;
+
+        buffer[i] = input[*position];
     }
     buffer[i] = '\0';
 
-    result = calloc(strlen(buffer)+1,sizeof(char));
+    result = calloc(strlen(buffer)+1, sizeof(char));
     strcpy(result, buffer);
 
     return result;
 }
 
 
+/** 
+ * Parse a string as a list of elements
+ * @return list of b_dict_element*'s
+ */
 b_dict_element* __parse_list (char* input, int* position)
 {
     // list format: l<values>e
@@ -218,6 +232,7 @@ b_dict_element* __parse_list (char* input, int* position)
         else if (input[*position] == 'd')
         {
             // Element: dictionary
+            (*position)++;
             pos->element.d = __parse_dict(input, position);
             pos->type = DICT;
         }
@@ -230,6 +245,7 @@ b_dict_element* __parse_list (char* input, int* position)
         else if (input[*position] == 'l')
         {
             // Element: list
+            (*position)++;
             pos->element.l = __parse_list(input, position);
             pos->type = LIST;
         }
@@ -249,4 +265,5 @@ b_dict_element* __parse_list (char* input, int* position)
         }
     }
 
+    return el;
 }
