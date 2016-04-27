@@ -8,6 +8,7 @@ typedef enum {false, true} bool;
  * ======================================== */
 
 struct _b_dict; // forward declaration
+struct _b_dict_element; // forward declaration
 
 /**
  * Union of possible element types
@@ -17,8 +18,9 @@ union b_dict_el
     struct _b_dict* d;
     char* c;
     int64_t i;
+    struct _b_dict_element* l;
 };
-typedef enum {DICT, STRING, INT} b_dict_el_t;
+typedef enum {DICT, STRING, INT, LIST} b_dict_el_t;
 
 /**
  * Bencoded item

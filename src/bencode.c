@@ -38,25 +38,33 @@ b_dict* parse_bencode_dict(char* input)
  */
 b_dict* __parse_dict (char* input, int* position)
 {
+    // Iterate over input string, parsing element keys then elements
+    // and inserting those into our dict adt
+ 
     b_dict* result = calloc(1,sizeof(b_dict));
+    char* last_key = 0;
 
     while (input[*position] != 0)
     {
-        if (input[*position] == 'd')
+        if (isdigit(input[*position]))
         {
+            // Element key
+            __parse_string(input, position);
+        }
+        else if (input[*position] == 'd')
+        {
+            // Element: dictionary
             __parse_dict(input, position);
         }
         else if (input[*position] == 'i')
         {
+            // Element: int
             __parse_int(input, position);
         }
         else if (input[*position] == 'l')
         {
-            printf("LIST");
-        }
-        else if (isdigit(input[*position]))
-        {
-
+            // Element: list
+            __parse_list(input, position);
         }
         else if (input[*position] == 'e')
         {
@@ -64,6 +72,8 @@ b_dict* __parse_dict (char* input, int* position)
         }
         else
         {
+            printf("%d\n",*position);
+            printf("%c\n",input[*position]);
             printf("Syntax error\n");
             exit(1);
         }
@@ -76,5 +86,20 @@ b_dict* __parse_dict (char* input, int* position)
 
 int __parse_int (char* input, int* position)
 {
+    // int format: i12341234e
+    // iterate from i to e, parsing what's in between 
+
+}
+
+char* __parse_string (char* input, int* position)
+{
+    // str format: <string length b10 ascii>:<string>
+    // parse string length (until :), then iterate over string
+
+}
+
+b_dict_element* __parse_list (char* input, int* position)
+{
+    // list format: l<values>e
 
 }
