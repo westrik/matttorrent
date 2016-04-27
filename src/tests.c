@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include "dict.h"
+#include "bencode.h"
 
 #define log(X) printf(X);fflush(stdout);
 
