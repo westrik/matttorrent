@@ -1,6 +1,8 @@
 #pragma once
 
 #define BUFFER_SIZE 256
+#define ERR(X) printf("ERR: %s\n",X);exit(1)
+
 #include "dict.h"
 
 /* ========================================
