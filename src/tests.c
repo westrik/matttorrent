@@ -168,7 +168,7 @@ void basic_bencode_dict()
 
 void basic_bencode_dict_2()
 {
-    log("- Basic bencoded data (with ints) can be parsed: ");
+    log("- Basic bencoded data (with ints) can be parsed:: \n");
 
     char* test_dict = malloc(sizeof(char)*25);
     strcpy(test_dict, "d3:cowi64e4:spami32ee\0");
@@ -176,8 +176,24 @@ void basic_bencode_dict_2()
     b_dict* result = parse_bencode_dict(test_dict);
     free(test_dict);
 
-    assert(result);
-    log("pass\n");
+    b_dict_element *x, *y;
+    x = dict_find(result, "cow");
+    log(" - int not null\n");
+    assert(x!=NULL);
+    log(" - int is int\n");
+    assert(get_data_type(x->type) == "INT");
+    log(" - int is correct value\n");
+    assert(x->element.i == 64);
+
+    y = dict_find(result, "spam");
+    log(" - int not null\n");
+    assert(y!=NULL);
+    log(" - int is int\n");
+    assert(get_data_type(y->type) == "INT");
+    log(" - int is correct value\n");
+    assert(y->element.i == 32);
+
+    log(":: pass\n\n");
 }
 
 void adv_bencode_dict()
@@ -185,33 +201,32 @@ void adv_bencode_dict()
     log("- Bencoded data with nested lists/dicts::\n");
 
     char* test_dict = malloc(sizeof(char)*100);
-    strcpy(test_dict, "d4:dictd3:moo4:spame4:listl4:spamee\0");
-
+    strcpy(test_dict, "d4:dictd3:moo4:spame4:listl4:spam5:haamsee\0");
     b_dict* result = parse_bencode_dict(test_dict);
+    assert(result);
 
-    b_dict_element *x, *y;
+    b_dict_element *x, *y, *z;
     x = dict_find(result, "dict");
     log(" - dict not null\n");
     assert(x!=NULL);
     log(" - dict is dict\n");
     assert(get_data_type(x->type) == "DICT");
 
-        y = dict_find(result, "moo");
-        log("  - child of dict is not null\n");
-        assert(y!=NULL);
-        log("  - child of dict is string\n");
-        assert(get_data_type(y->type) == "STRING");
+    y = dict_find(x->element.d, "moo");
+    log("  - child of dict is not null\n");
+    assert(y != NULL);
+    log("  - child of dict is string\n");
+    assert(get_data_type(y->type) == "STRING");
+    log("  - child of dict equals orig\n");
+    assert(0==strcmp(y->element.c, "spam"));
 
-    x = dict_find(result, "list");
+    z = dict_find(result, "list");
     log(" - list is not null\n");
-    assert(x!=NULL);
+    assert(z!=NULL);
     log(" - list is list\n");
-    assert(get_data_type(x->type) == "LIST");
-
+    assert(get_data_type(z->type) == "LIST");
 
     free(test_dict);
-
-    assert(result);
 
     log(":: all pass\n\n");
 }

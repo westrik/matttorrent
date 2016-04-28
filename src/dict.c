@@ -168,6 +168,10 @@ void __free_linked_list(b_dict_element* el)
     {
         dict_destroy(el->element.d);
     }
+    else if (el->type == LIST)
+    {
+        __free_linked_list(el->element.l);
+    }
     else if (el->type == STRING)
     {
         if (NULL != el->element.c)

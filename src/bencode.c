@@ -47,9 +47,9 @@ b_dict* __parse_dict (char* input, int* position)
     char* key = 0;
     bool parsing_element = false;
 
-    union b_dict_el el;
-    b_dict_el_t el_type;
-    b_dict_element* dict_el;
+    union b_dict_el el = {0};
+    b_dict_el_t el_type = -1;
+    b_dict_element* dict_el = 0;
 
     while (input[*position] != 0)
     {
@@ -72,6 +72,7 @@ b_dict* __parse_dict (char* input, int* position)
             // Element: dictionary
             (*position)++;
             el.d = __parse_dict(input, position);
+
             el_type = DICT;
         }
         else if (input[*position] == 'i')
@@ -89,8 +90,6 @@ b_dict* __parse_dict (char* input, int* position)
         }
         else if (input[*position] != 'e')
         {
-            printf("%d\n",*position);
-            printf("%c\n",input[*position]);
             ERR("Syntax error");
         }
 
@@ -104,9 +103,14 @@ b_dict* __parse_dict (char* input, int* position)
 
             dict_insert(result, dict_el);
         }
+
         parsing_element = !parsing_element;
 
         (*position)++;
+        if (input[*position] == 'e')
+        {
+            break;
+        }
     }
 
     return result;
@@ -131,15 +135,17 @@ int64_t __parse_int (char* input, int* position)
                 && (isdigit(input[*position]) || input[*position] == '-'))
         {
             buffer[i] = input[*position];
+            i++;
         }
 
-        if (++i == BUFFER_SIZE)
+        if (i == BUFFER_SIZE)
         {
             ERR("Integer length exceeds buffer size");
         }
 
         (*position)++;
     }
+
     buffer[i] = '\0';
 
     return strtoll(buffer, NULL, 10);
@@ -192,6 +198,7 @@ char* __parse_string (char* input, int* position)
 
     for (i = 0; i < string_len; i++)
     {
+        // increment counter
         (*position)++;
 
         if (i == 2048)
@@ -251,11 +258,10 @@ b_dict_element* __parse_list (char* input, int* position)
         }
         else
         {
-            printf("%d\n",*position);
-            printf("%c\n",input[*position]);
             ERR("Syntax error");
         }
         
+        // increment counter
         (*position)++;
 
         if (input[*position] != 'e')
