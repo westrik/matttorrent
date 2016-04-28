@@ -7,8 +7,8 @@
 int main(int argc, char** argv)
 {
     FILE *torrentfile = NULL;
-    b_dict *metainfo = NULL,
-           *tracker_response = NULL;
+    t_conf *metainfo = NULL;
+    b_dict *tracker_response = NULL;
 
     if (argc == 2)
     {
@@ -25,6 +25,11 @@ int main(int argc, char** argv)
 
     // Initialize
     metainfo = parse_torrent_file(torrentfile);
+
+    printf("name:\n%s\n",metainfo->name);
+    printf("tracker:\n%s\n",metainfo->announce);
+    printf("piece_len:\n%lld\n",metainfo->piece_len);
+    printf("pieces:\n%s\n",metainfo->pieces);
 
 
     // Get peers from tracker
