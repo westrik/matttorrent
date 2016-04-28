@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <curl/curl.h>
 
 #include "torrent.h"
 
@@ -104,9 +105,25 @@ t_conf* parse_torrent_file(FILE* torrent_f)
  */
 b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
 {
+    CURL *curl;
+    CURLcode res;
+
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, metainfo->announce);
+
+        // Shoot off a GET req
+        res = curl_easy_perform(curl);
+
+        // Check for errors
+        if(res != CURLE_OK)
+        fprintf(stderr, "curl_easy_perform() failed: %s\n",
+        curl_easy_strerror(res));
+
+        curl_easy_cleanup(curl);
+    }
 
 
-
-
+    // Parse bencoded response
 
 }

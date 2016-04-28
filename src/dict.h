@@ -50,7 +50,6 @@ b_dict;
  * Function declarations
  * ======================================== */
 
-
 b_dict* dict_init(unsigned int size);
 
 bool dict_insert(b_dict* dict, b_dict_element* el);

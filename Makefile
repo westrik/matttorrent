@@ -1,5 +1,5 @@
 CC=clang
-CFLAGS= -Wall -pedantic -g
+CFLAGS= -Wall -pedantic -g 
 
 SRC_D=src
 OBJ_D=obj
@@ -16,6 +16,7 @@ TEST=                                                                         \
 COMMON_OUT = $(addprefix $(OBJ_D)/,$(COMMON))
 TARGET_OUT = $(addprefix $(OBJ_D)/,$(TARGET))
 TEST_OUT = $(addprefix $(OBJ_D)/,$(TEST))
+LIB = -lcurl
 
 BIN = matttorrent
 TEST_BIN = test
@@ -33,7 +34,7 @@ $(OBJ_D):
 	$(CC) $(CFLAGS) -c $(SRC_D)/$*.c -o $(OBJ_D)/$@
 
 $(BIN) : $(COMMON) $(TARGET)
-	$(CC) -o $(BIN) $(COMMON_OUT) $(TARGET_OUT)
+	$(CC) -o $(BIN) $(COMMON_OUT) $(TARGET_OUT) $(LIB)
 
 clean:
 	rm -rf $(OBJ_D)/* $(BIN) $(TEST_BIN)
