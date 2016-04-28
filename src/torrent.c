@@ -27,9 +27,67 @@
  * Decode bencoded torrent file
  * @param FILE* torrent: file pointer of bencoded torrent file
  */
-b_dict* parse_torrent_file(FILE* torrent)
+b_dict* parse_torrent_file(FILE* torrent_f)
 {
+    b_dict* torrent_config;
+    char* file_buffer = 0;
+    int length = 0;
 
+    if (torrent_f)
+    {
+        fseek(torrent_f, 0, SEEK_END);
+
+        length = ftell(torrent_f);
+        file_buffer = malloc(length*sizeof(char));
+
+        // don't use torrent files >4GB lol
+        fseek(torrent_f, 0, SEEK_SET);
+
+        if (file_buffer)
+        {
+            fread(file_buffer, 1, length, torrent_f);
+        }
+    }
+    else
+    {
+        printf("invalid file pointer\n");
+    }
+
+    // remember to fclose torrent_f
+    
+    torrent_config = parse_bencode_dict(file_buffer);
+
+    b_dict_element* x = dict_find(torrent_config, "announce");
+
+    if (x)
+        printf("%s\n",x->element.c);
+    else
+        printf("no announce url found\n");
+
+
+    b_dict_element* y = dict_find(torrent_config, "info");
+    b_dict* d = y->element.d;
+
+    if (!y)
+        printf("no info dict found\n");
+
+
+    b_dict_element* z = dict_find(d, "piece length");
+
+    if (z)
+        printf("%lld\n",z->element.i);
+    else
+        printf("eek\n");
+
+    b_dict_element* p = dict_find(d, "pieces");
+
+    if (p)
+        printf("%s\n",p->element.c);
+
+
+    b_dict_element* n = dict_find(d, "name");
+    if (n)
+        printf("%s\n",n->element.c);
 }
 
 
@@ -40,7 +98,7 @@ b_dict* parse_torrent_file(FILE* torrent)
  * @param b_dict* metainfo: torrent metainfo dictionary
  * @param FILE* torrent: original file pointer (needed to calculate SHA1 hash of info dict)
  */
-b_dict* tracker_request(b_dict* metainfo, FILE* torrent)
+b_dict* tracker_request(b_dict* metainfo, FILE* torrent_f)
 {
 
 }

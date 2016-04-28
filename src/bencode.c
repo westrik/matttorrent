@@ -140,6 +140,9 @@ int64_t __parse_int (char* input, int* position)
 
         if (i == BUFFER_SIZE)
         {
+
+            printf("\n\n\nat %d,",*position);
+            fflush(stdout);
             ERR("Integer length exceeds buffer size");
         }
 
@@ -162,7 +165,7 @@ char* __parse_string (char* input, int* position)
     // str format: <string length b10 ascii>:<string>
     
     int string_len = 0;
-    char buffer[2048]; // standard buffer size seems too small
+    char buffer[STR_BUFFER_SIZE]; // standard buffer size seems too small
     int i = 0;
 
     char* result;
@@ -185,7 +188,7 @@ char* __parse_string (char* input, int* position)
             ERR("Invalid string length");
         }
 
-        if (++i == 2048)
+        if (++i == STR_BUFFER_SIZE)
         {
             ERR("Integer length exceeds buffer size");
         }
@@ -201,9 +204,9 @@ char* __parse_string (char* input, int* position)
         // increment counter
         (*position)++;
 
-        if (i == 2048)
+        if (i == STR_BUFFER_SIZE)
         {
-            ERR("Integer length exceeds buffer size");
+            ERR("String length exceeds buffer size");
         }
 
         buffer[i] = input[*position];
