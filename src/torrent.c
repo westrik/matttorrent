@@ -108,6 +108,15 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
     CURL *curl;
     CURLcode res;
 
+    char url[BUFFER];
+
+    // build request URL
+    strcat(url, metainfo->announce);
+    strcat(url, "?info_hash=%24%60%d6%c8%af%f3%fe%e6s0%ab7%25%c4%a1%e5%d8J%7d%c8&peer_id=-TR2840-n93spnhfafc0&port=65474&uploaded=0&downloaded=0&left=689963008&numwant=80&key=15c3e853&compact=1&supportcrypto=1&event=started");
+
+
+    printf("%s\n",url);
+
     curl = curl_easy_init();
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, metainfo->announce);

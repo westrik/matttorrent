@@ -4,6 +4,7 @@
 #include "bencode.h"
 
 #define PEER_ID "-M30001-"
+#define BUFFER 512
 
 /* ==========================================
  * Data structure declarations
