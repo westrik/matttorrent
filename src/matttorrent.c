@@ -26,10 +26,10 @@ int main(int argc, char** argv)
     // Initialize
     metainfo = parse_torrent_file(torrentfile);
 
-    printf("name:\n%s\n",metainfo->name);
-    printf("tracker:\n%s\n",metainfo->announce);
-    printf("piece_len:\n%lld\n",metainfo->piece_len);
-    printf("pieces:\n%s\n",metainfo->pieces);
+//    printf("name:\n%s\n",metainfo->name);
+//    printf("tracker:\n%s\n",metainfo->announce);
+//    printf("piece_len:\n%lld\n",metainfo->piece_len);
+//printf("pieces:\n%s\n",metainfo->pieces);
 
 
     // Get peers from tracker

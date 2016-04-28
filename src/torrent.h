@@ -26,3 +26,5 @@ t_conf;
 char* dump_file_to_string(FILE* file);
 t_conf* parse_torrent_file(FILE* torrent_f);
 b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f);
+
+char* info_hash(FILE* torrent_f);

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <curl/curl.h>
+#include <openssl/sha.h>
 
 #include "torrent.h"
 
@@ -82,7 +83,7 @@ t_conf* parse_torrent_file(FILE* torrent_f)
 /* Notes about tracker params
  *
  * Example tracker request
- * http://tracker.archlinux.org:6969/announce?info_hash=%24%60%d6%c8%af%f3%fe%e6s0%ab7%25%c4%a1%e5%d8J%7d%c8&peer_id=-TR2840-n93spnhfafc0&port=65474&uploaded=0&downloaded=0&left=689963008&numwant=80&key=15c3e853&compact=1&supportcrypto=1&event=started
+ *http://thomasballinger.com:6969/announce?info_hash=%ef%5c%ce%17v%b19%14.F%b5%1dE%e7%edN%84%bc%dam&peer_id=-TR2920-bb4niiyk3cuw&port=65474&uploaded=0&downloaded=0&left=1751391&numwant=80&key=2aee37c0&compact=1&supportcrypto=1&event=started
  *
  * info_hash is SHA1 of info dictionary from torrent file, parse that out
  * peer_id: PEER_ID+12 random numbers
@@ -110,16 +111,21 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
 
     char url[BUFFER];
 
+    info_hash(torrent_f);
+
     // build request URL
     strcat(url, metainfo->announce);
-    strcat(url, "?info_hash=%24%60%d6%c8%af%f3%fe%e6s0%ab7%25%c4%a1%e5%d8J%7d%c8&peer_id=-TR2840-n93spnhfafc0&port=65474&uploaded=0&downloaded=0&left=689963008&numwant=80&key=15c3e853&compact=1&supportcrypto=1&event=started");
+    strcat(url, "?info_hash=%ef%5c%ce%17v%b19%14.F%b5%1dE%e7%edN%84%bc%dam&peer_id=-TR2920-bb4niiyk3cuw&port=65474&uploaded=0&downloaded=0&left=1751391&numwant=80&key=2aee37c0&compact=1&supportcrypto=1&event=started");
+
+
+    return 0;
 
 
     printf("%s\n",url);
 
     curl = curl_easy_init();
     if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, metainfo->announce);
+        curl_easy_setopt(curl, CURLOPT_URL, url);
 
         // Shoot off a GET req
         res = curl_easy_perform(curl);
@@ -135,4 +141,43 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
 
     // Parse bencoded response
 
+}
+
+/**
+ * Find bencoded info dict in torrent file
+ * then get SHA1 hash of this 
+ *
+ * for data/test.torrent this should be info hash:
+ * %ef%5c%ce%17v%b19%14.F%b5%1dE%e7%edN%84%bc%dam
+ */
+char* info_hash (FILE* torrent_f)
+{
+    char *file_buffer = dump_file_to_string(torrent_f),
+         *info_dict = strstr(file_buffer, "4:info");
+
+    int* position = malloc(sizeof(int));
+    *position = 6;
+
+    int start, end;
+
+    if (info_dict != NULL)
+    {
+        start = *position;
+
+        __parse_dict(info_dict, position);
+
+        end = *position;
+    }
+
+    size_t length = strlen("Hello, world!")+1;
+    void* data = malloc(sizeof(char)*length);
+    memcpy(data, "Hello, world!", length);
+
+    unsigned char hash[SHA_DIGEST_LENGTH];
+    printf("DOING SHA1\n");
+    SHA1(data, length, hash);
+    printf("DONE SHA1\n");
+
+    printf("%s\n", hash);
+            
 }
