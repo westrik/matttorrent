@@ -16,6 +16,7 @@ int main(int argc, char** argv)
         if (!torrentfile)
         {
             printf("Could not open '%s'\n", argv[1]);
+            exit(1);
         }
     }
     else

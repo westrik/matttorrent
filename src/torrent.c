@@ -111,19 +111,19 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
 
     char url[BUFFER];
 
-    info_hash(torrent_f);
-
     // build request URL
     strcat(url, metainfo->announce);
     strcat(url, "?info_hash=%ef%5c%ce%17v%b19%14.F%b5%1dE%e7%edN%84%bc%dam&peer_id=-TR2920-bb4niiyk3cuw&port=65474&uploaded=0&downloaded=0&left=1751391&numwant=80&key=2aee37c0&compact=1&supportcrypto=1&event=started");
 
 
-    return 0;
 
 
-    printf("%s\n",url);
 
     curl = curl_easy_init();
+    printf("%s\n",curl_easy_escape(curl, info_hash(torrent_f), SHA_DIGEST_LENGTH));
+
+    return 0;
+
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url);
 
@@ -153,31 +153,42 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
 char* info_hash (FILE* torrent_f)
 {
     char *file_buffer = dump_file_to_string(torrent_f),
-         *info_dict = strstr(file_buffer, "4:info");
-
-    int* position = malloc(sizeof(int));
-    *position = 6;
-
-    int start, end;
-
-    if (info_dict != NULL)
-    {
-        start = *position;
-
-        __parse_dict(info_dict, position);
-
-        end = *position;
-    }
-
-    size_t length = strlen("Hello, world!")+1;
-    void* data = malloc(sizeof(char)*length);
-    memcpy(data, "Hello, world!", length);
+         *info_dict_key = strstr(file_buffer, "4:info"),
+         *info_dict = NULL;
 
     unsigned char hash[SHA_DIGEST_LENGTH];
-    printf("DOING SHA1\n");
-    SHA1(data, length, hash);
-    printf("DONE SHA1\n");
 
-    printf("%s\n", hash);
-            
+    int position = 6; // Offset of dictionary from start of key
+
+    int start, end;
+    size_t len;
+
+    // Find start and end of info dict in file
+    if (info_dict_key != NULL)
+    {
+        start = position;
+
+        __parse_dict(info_dict_key, &position);
+
+        end = position;
+    }
+    else
+    {
+        return NULL;
+    }
+
+    // calculate SHA1 hash of info dict
+    len = end-start;
+    info_dict = malloc(sizeof(char)*len);
+    memcpy((void*)info_dict, info_dict_key+6, len);
+
+    SHA1((void*)info_dict, len, hash);
+
+    char* heap_hash = malloc(sizeof(char)*SHA_DIGEST_LENGTH);
+    memcpy(heap_hash, hash, SHA_DIGEST_LENGTH);
+
+    free(file_buffer);
+    free(info_dict);
+
+    return heap_hash;
 }

@@ -13,22 +13,14 @@
 b_dict* parse_bencode_dict(char* input)
 {
     b_dict* result;
-    int* position;
+    int position = 1;
 
     if (input[0] != 'd')
     {
         return NULL;
     }
         
-    position = malloc(sizeof(int));
-    *position = 1;
-
-    result = __parse_dict(input, position);
-
-    if (position)
-    {
-        free(position);
-    }
+    result = __parse_dict(input, &position);
 
     return result;
 }
