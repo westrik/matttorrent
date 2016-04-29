@@ -214,7 +214,7 @@ char* generate_peer_id()
 
     // generate random part
     const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJK.0123456789";
-	for (size_t n = strlen(peer_id)-1; n < 20; n++) {
+	for (size_t n = strlen(peer_id); n < 20; n++) {
 		int key = rand() % (int) (sizeof charset - 1);
 		peer_id[n] = charset[key];
 	}
