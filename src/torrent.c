@@ -106,34 +106,41 @@ t_conf* parse_torrent_file(FILE* torrent_f)
  */
 b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
 {
-    CURL *curl;
+    CURL *curl = curl_easy_init();
     CURLcode res;
 
     char url[BUFFER];
 
-    // build request URL
-    strcat(url, metainfo->announce);
-    strcat(url, "?info_hash=%ef%5c%ce%17v%b19%14.F%b5%1dE%e7%edN%84%bc%dam&peer_id=-TR2920-bb4niiyk3cuw&port=65474&uploaded=0&downloaded=0&left=1751391&numwant=80&key=2aee37c0&compact=1&supportcrypto=1&event=started");
+    char *_info_hash = curl_easy_escape(curl, info_hash(torrent_f), SHA_DIGEST_LENGTH);
 
+    snprintf(
+        url, BUFFER,
+            "%s?info_hash=%s&peer_id=%s&port=%d&left=%lu"
+            "&uploaded=0&downloaded=0&numwant=80&supportcrypto=0"
+            "&compact=1&event=started",
+        metainfo->announce, 
+        _info_hash, 
+        generate_peer_id(), 
+        DEFAULT_PORT, 
+        strlen(metainfo->pieces)
+    );
 
+    printf("%s\n",url);
 
-
-
-    curl = curl_easy_init();
-    printf("%s\n",curl_easy_escape(curl, info_hash(torrent_f), SHA_DIGEST_LENGTH));
-
-    return 0;
+    free(_info_hash);
 
     if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url);
+        curl_easy_setopt(curl, CURLOPT_URL, &url);
 
         // Shoot off a GET req
         res = curl_easy_perform(curl);
 
         // Check for errors
         if(res != CURLE_OK)
-        fprintf(stderr, "curl_easy_perform() failed: %s\n",
-        curl_easy_strerror(res));
+        {
+            fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                curl_easy_strerror(res));
+        }
 
         curl_easy_cleanup(curl);
     }
@@ -150,7 +157,7 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
  * for data/test.torrent this should be info hash:
  * %ef%5c%ce%17v%b19%14.F%b5%1dE%e7%edN%84%bc%dam
  */
-char* info_hash (FILE* torrent_f)
+char* info_hash(FILE* torrent_f)
 {
     char *file_buffer = dump_file_to_string(torrent_f),
          *info_dict_key = strstr(file_buffer, "4:info"),
@@ -192,4 +199,27 @@ char* info_hash (FILE* torrent_f)
     free(info_dict);
 
     return hash;
+}
+
+/** 
+ * Generate partially random peer id
+ * @returns char* 20 char peer id
+ */
+char* generate_peer_id()
+{
+    char* peer_id = calloc(21, sizeof(char));
+
+    // copy default part
+    strcat(peer_id, PEER_ID);
+
+    // generate random part
+    const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJK.0123456789";
+	for (size_t n = strlen(peer_id)-1; n < 20; n++) {
+		int key = rand() % (int) (sizeof charset - 1);
+		peer_id[n] = charset[key];
+	}
+	peer_id[20] = '\0';
+
+    return peer_id;
+
 }

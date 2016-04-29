@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "bencode.h"
 #include "torrent.h"
@@ -9,6 +10,8 @@ int main(int argc, char** argv)
     FILE *torrentfile = NULL;
     t_conf *metainfo = NULL;
     b_dict *tracker_response = NULL;
+
+    srand(time(NULL));
 
     if (argc == 2)
     {
