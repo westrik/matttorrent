@@ -156,7 +156,8 @@ char* info_hash (FILE* torrent_f)
          *info_dict_key = strstr(file_buffer, "4:info"),
          *info_dict = NULL;
 
-    unsigned char hash[SHA_DIGEST_LENGTH];
+    unsigned char _hash[SHA_DIGEST_LENGTH];
+    char* hash = NULL;
 
     int position = 6; // Offset of dictionary from start of key
 
@@ -182,13 +183,13 @@ char* info_hash (FILE* torrent_f)
     info_dict = malloc(sizeof(char)*len);
     memcpy((void*)info_dict, info_dict_key+6, len);
 
-    SHA1((void*)info_dict, len, hash);
+    SHA1((void*)info_dict, len, _hash);
 
-    char* heap_hash = malloc(sizeof(char)*SHA_DIGEST_LENGTH);
-    memcpy(heap_hash, hash, SHA_DIGEST_LENGTH);
+    hash = malloc(sizeof(char)*SHA_DIGEST_LENGTH);
+    memcpy(hash, _hash, SHA_DIGEST_LENGTH);
 
     free(file_buffer);
     free(info_dict);
 
-    return heap_hash;
+    return hash;
 }
