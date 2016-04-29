@@ -21,6 +21,14 @@ typedef struct _torrent_config
 t_conf;
 
 
+typedef struct _response_chunk
+{
+    char *memory;
+    size_t size;
+}
+response_chunk;
+
+
 /* ==========================================
  * Function declarations
  * ========================================== */
@@ -30,3 +38,5 @@ b_dict *tracker_request(t_conf* metainfo, FILE* torrent_f);
 
 char *info_hash(FILE* torrent_f);
 char *generate_peer_id();
+
+static size_t write_mem_cb(void *contents, size_t size, size_t nmemb, void *userp);

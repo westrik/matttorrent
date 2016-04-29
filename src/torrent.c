@@ -113,6 +113,10 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
 
     char *_info_hash = curl_easy_escape(curl, info_hash(torrent_f), SHA_DIGEST_LENGTH);
 
+	response_chunk chunk;
+	chunk.memory = malloc(1); // automatically grown
+	chunk.size = 0;
+
     snprintf(
         url, BUFFER,
             "%s?info_hash=%s&peer_id=%s&port=%d&left=%lu"
@@ -132,6 +136,13 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, &url);
 
+		/* send all data to this function  */ 
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_mem_cb);
+ 
+		/* we pass our 'chunk' struct to the callback function */ 
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, "matttorrent/1.0");
+
         // Shoot off a GET req
         res = curl_easy_perform(curl);
 
@@ -141,6 +152,12 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
             fprintf(stderr, "curl_easy_perform() failed: %s\n",
                 curl_easy_strerror(res));
         }
+		else
+		{
+			printf("%lu bytes retrieved\n", (long)chunk.size);
+
+			printf("%s\n", (char*)chunk.memory);
+		}
 
         curl_easy_cleanup(curl);
     }
@@ -222,4 +239,25 @@ char* generate_peer_id()
 
     return peer_id;
 
+}
+
+/**
+ * Helper function to write cURL responses to memory instead of stdout
+ */
+static size_t write_mem_cb (void *contents, size_t size, size_t nmemb, void *userp)
+{
+	size_t realsize = size * nmemb;
+	response_chunk *mem = (response_chunk *)userp;
+
+	mem->memory = realloc(mem->memory, mem->size + realsize + 1);
+	if(mem->memory == NULL) {
+		printf("Not enough memory (realloc returned NULL)\n");
+		return 0;
+	}
+
+	memcpy(&(mem->memory[mem->size]), contents, realsize);
+	mem->size += realsize;
+	mem->memory[mem->size] = 0;
+
+	return realsize;
 }
