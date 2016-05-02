@@ -117,6 +117,7 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
 	chunk.memory = malloc(1); // automatically grown
 	chunk.size = 0;
 
+	// Generate request URL
     snprintf(
         url, BUFFER,
             "%s?info_hash=%s&peer_id=%s&port=%d&left=%lu"
@@ -128,11 +129,9 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
         DEFAULT_PORT, 
         strlen(metainfo->pieces)
     );
-
-    printf("%s\n",url);
-
     free(_info_hash);
 
+	// Make request
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, &url);
 
@@ -151,20 +150,14 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
         {
             fprintf(stderr, "curl_easy_perform() failed: %s\n",
                 curl_easy_strerror(res));
+			exit(1);
         }
-		else
-		{
-			printf("%lu bytes retrieved\n", (long)chunk.size);
-
-			printf("%s\n", (char*)chunk.memory);
-		}
 
         curl_easy_cleanup(curl);
     }
 
-
     // Parse bencoded response
-
+	return parse_bencode_dict((char*)chunk.memory);
 }
 
 /**

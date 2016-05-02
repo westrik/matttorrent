@@ -7,7 +7,9 @@ OBJ_D=obj
 COMMON=                                                                       \
 	torrent.o                                                                 \
 	bencode.o                                                                 \
-	dict.o
+	dict.o                                                                    \
+	peer.o                                                                    \
+	chunk.o
 TARGET=                                                                       \
 	matttorrent.o
 TEST=                                                                         \
