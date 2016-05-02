@@ -36,8 +36,8 @@ Run:
 - [x] dictionary ADT for bencoded data
 - [x] parse bencode
 - [x] parse torrent file
-- [ ] connect to tracker, parse bencoded response
-- [ ] connect to peers
+- [x] connect to tracker, parse bencoded response
+- [~] connect to peers
   - [ ] handshake 
 - [ ] message passing
   - [ ] bitfield, have

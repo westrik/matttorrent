@@ -42,16 +42,15 @@ int main(int argc, char** argv)
     printf("OK\n");
 
     // Connect to peers, start downloading
-    chunks = start_download(tracker_response);     
+    chunks = download(tracker_response);     
 
-    // Finish, clean up
+    // Save downloaded chunks to designated file
     output = fopen(metainfo->name,"w+");
-    if (output == NULL)
+    if (output == NULL || !save_chunks(chunks, output))
     {
         printf("Failed to save download to %s\n", metainfo->name);
         exit(1);
     }
-    combine_chunks(chunks, output);
 
     // Close files, free memory
     fclose(torrentfile);

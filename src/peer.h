@@ -1,5 +1,6 @@
 #pragma once
 
+#include "torrent.h"
 #include "chunk.h"
 
 /**
@@ -7,6 +8,6 @@
  * start communicating with them and downloading chunks.
  * @return chunks struct (all file chunks)
  */
-chunks *start_download(b_dict *tracker_response);
+chunks *download(b_dict *tracker_response);
 
 //peer_resp *handshake(char *peer_loc);
