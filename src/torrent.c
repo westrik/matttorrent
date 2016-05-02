@@ -49,7 +49,7 @@ t_conf* parse_torrent_file(FILE* torrent_f)
 {
     b_dict* torrent_config;
     t_conf* config = calloc(1,sizeof(t_conf));
-    
+
     char* file_buffer = dump_file_to_string(torrent_f);
 
     // Parse torrent file
@@ -113,34 +113,34 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
 
     char *_info_hash = curl_easy_escape(curl, info_hash(torrent_f), SHA_DIGEST_LENGTH);
 
-	response_chunk chunk;
-	chunk.memory = malloc(1); // automatically grown
-	chunk.size = 0;
+    response_chunk chunk;
+    chunk.memory = malloc(1); // automatically grown
+    chunk.size = 0;
 
-	// Generate request URL
+    // Generate request URL
     snprintf(
         url, BUFFER,
             "%s?info_hash=%s&peer_id=%s&port=%d&left=%lu"
             "&uploaded=0&downloaded=0&numwant=80&supportcrypto=0"
             "&compact=1&event=started",
-        metainfo->announce, 
-        _info_hash, 
-        generate_peer_id(), 
-        DEFAULT_PORT, 
+        metainfo->announce,
+        _info_hash,
+        generate_peer_id(),
+        DEFAULT_PORT,
         strlen(metainfo->pieces)
     );
     free(_info_hash);
 
-	// Make request
+    // Make request
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, &url);
 
-		/* send all data to this function  */ 
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_mem_cb);
- 
-		/* we pass our 'chunk' struct to the callback function */ 
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, "matttorrent/1.0");
+        /* send all data to this function  */
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_mem_cb);
+
+        /* we pass our 'chunk' struct to the callback function */
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, "matttorrent/1.0");
 
         // Shoot off a GET req
         res = curl_easy_perform(curl);
@@ -150,19 +150,19 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
         {
             fprintf(stderr, "curl_easy_perform() failed: %s\n",
                 curl_easy_strerror(res));
-			exit(1);
+            exit(1);
         }
 
         curl_easy_cleanup(curl);
     }
 
     // Parse bencoded response
-	return parse_bencode_dict((char*)chunk.memory);
+    return parse_bencode_dict((char*)chunk.memory);
 }
 
 /**
  * Find bencoded info dict in torrent file
- * then get SHA1 hash of this 
+ * then get SHA1 hash of this
  *
  * for data/test.torrent this should be info hash:
  * %ef%5c%ce%17v%b19%14.F%b5%1dE%e7%edN%84%bc%dam
@@ -211,7 +211,7 @@ char* info_hash(FILE* torrent_f)
     return hash;
 }
 
-/** 
+/**
  * Generate partially random peer id
  * @returns char* 20 char peer id
  */
@@ -224,11 +224,11 @@ char* generate_peer_id()
 
     // generate random part
     const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJK.0123456789";
-	for (size_t n = strlen(peer_id); n < 20; n++) {
-		int key = rand() % (int) (sizeof charset - 1);
-		peer_id[n] = charset[key];
-	}
-	peer_id[20] = '\0';
+    for (size_t n = strlen(peer_id); n < 20; n++) {
+        int key = rand() % (int) (sizeof charset - 1);
+        peer_id[n] = charset[key];
+    }
+    peer_id[20] = '\0';
 
     return peer_id;
 
@@ -239,18 +239,18 @@ char* generate_peer_id()
  */
 static size_t write_mem_cb (void *contents, size_t size, size_t nmemb, void *userp)
 {
-	size_t realsize = size * nmemb;
-	response_chunk *mem = (response_chunk *)userp;
+    size_t realsize = size * nmemb;
+    response_chunk *mem = (response_chunk *)userp;
 
-	mem->memory = realloc(mem->memory, mem->size + realsize + 1);
-	if(mem->memory == NULL) {
-		printf("Not enough memory (realloc returned NULL)\n");
-		return 0;
-	}
+    mem->memory = realloc(mem->memory, mem->size + realsize + 1);
+    if(mem->memory == NULL) {
+        printf("Not enough memory (realloc returned NULL)\n");
+        return 0;
+    }
 
-	memcpy(&(mem->memory[mem->size]), contents, realsize);
-	mem->size += realsize;
-	mem->memory[mem->size] = 0;
+    memcpy(&(mem->memory[mem->size]), contents, realsize);
+    mem->size += realsize;
+    mem->memory[mem->size] = 0;
 
-	return realsize;
+    return realsize;
 }
