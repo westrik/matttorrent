@@ -113,6 +113,8 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
 
     char *_info_hash = curl_easy_escape(curl, info_hash(torrent_f), SHA_DIGEST_LENGTH);
 
+    b_dict *response = NULL;
+
     response_chunk chunk;
     chunk.memory = malloc(1); // automatically grown
     chunk.size = 0;
@@ -157,7 +159,15 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
     }
 
     // Parse bencoded response
-    return parse_bencode_dict((char*)chunk.memory);
+    response = parse_bencode_dict((char*)chunk.memory);
+
+    if (dict_find(response, "failure reason"))
+    {
+        printf("\nFailed, tracker says \"%s\"\n",dict_find(response, "failure reason")->element.c);
+        exit(1);
+    }
+
+    return response;
 }
 
 /**

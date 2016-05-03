@@ -13,14 +13,15 @@ chunks *download(b_dict *tracker_response)
 {
     int i;
 
-    for(i= 0; i<20; i++)
+    for(i= 0; i<100; i++)
     {
-        printf("\rIn progress %d", i);
+        printf("\rDownloading %d%%", i);
         fflush(stdout);
 
 
-        sleep(0.1);
+        usleep(250000);
     }
+    printf("\n");
 
     return 0;
 }

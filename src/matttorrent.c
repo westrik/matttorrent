@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     // Get peers from tracker
     printf("Contacting tracker... ");
     tracker_response = tracker_request(metainfo, torrentfile);
-    printf("OK\n");
+    printf("OK\nDownloading %s...\n\n", metainfo->name);
 
     // Connect to peers, start downloading
     chunks = download(tracker_response);     

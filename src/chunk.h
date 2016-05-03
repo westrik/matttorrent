@@ -27,4 +27,4 @@ bool save_chunks(chunks *chunks, FILE *out);
 /**
  * Free memory associated with file chunks
  */
-void *free_chunks(chunks *chunks);
+void free_chunks(chunks *chunks);

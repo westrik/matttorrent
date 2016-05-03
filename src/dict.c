@@ -187,6 +187,22 @@ void __free_linked_list(b_dict_element* el)
 
 
 /**
+ * Count length of linked list
+ * @param b_dict_element* el: Head of list 
+ */
+int count_linked_list(b_dict_element* el)
+{
+    if (NULL == el)
+        return 0;
+
+    else if (NULL == el->next)
+        return 1;
+
+    else
+        return count_linked_list(el->next) + 1;
+}
+
+/**
  * Generate hash index for given key
  * @param char* key: key
  * @param int dict_size: size of hashmap
