@@ -122,27 +122,32 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
     // Generate request URL
     snprintf(
         url, BUFFER,
-            "%s?info_hash=%s&peer_id=%s&port=%d&left=%lu"
-            "&uploaded=0&downloaded=0&numwant=80&supportcrypto=0"
+            "http%s?info_hash=%s&peer_id=%s&port=%d&left=%lu"
+            "&uploaded=0&downloaded=0supportcrypto=0"
             "&compact=1&event=started",
-        metainfo->announce,
-        _info_hash,
-        generate_peer_id(),
-        DEFAULT_PORT,
-        strlen(metainfo->pieces)
+        strstr(metainfo->announce,"://"), // split on :// (so udp:// works)
+        _info_hash,                       // SHA1 hash of info dictionary
+        generate_peer_id(),               // partially random peer id
+        DEFAULT_PORT,                     // port we're listening on
+        strlen(metainfo->pieces)          // number of pieces we need
     );
+
+    printf("%s",url);
     free(_info_hash);
 
     // Make request
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, &url);
 
-        /* send all data to this function  */
+        // send all data to this function 
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_mem_cb);
 
-        /* we pass our 'chunk' struct to the callback function */
+        // we pass our 'chunk' struct to the callback function 
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "matttorrent/1.0");
+        
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
 
         // Shoot off a GET req
         res = curl_easy_perform(curl);

@@ -13,6 +13,7 @@ chunks *download(b_dict *tracker_response)
 {
     int i;
 
+    return 0;
     for(i= 0; i<100; i++)
     {
         printf("\rDownloading %d%%", i);
@@ -23,7 +24,6 @@ chunks *download(b_dict *tracker_response)
     }
     printf("\n");
 
-    return 0;
 }
 
 /*peer_resp *handshake(char *peer_loc)

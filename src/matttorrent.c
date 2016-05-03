@@ -37,9 +37,12 @@ int main(int argc, char** argv)
     metainfo = parse_torrent_file(torrentfile);
 
     // Get peers from tracker
-    printf("Contacting tracker... ");
+    printf("Contacting tracker... "); fflush(stdout);
     tracker_response = tracker_request(metainfo, torrentfile);
-    printf("OK\nDownloading %s...\n\n", metainfo->name);
+    printf("OK\nDownloading %s with %d peers\n\n", 
+            metainfo->name, 
+            count_linked_list(dict_find(tracker_response, "peers"))
+        );
 
     // Connect to peers, start downloading
     chunks = download(tracker_response);     

@@ -1,7 +1,7 @@
 #pragma once
 
 #define BUFFER_SIZE 256
-#define STR_BUFFER_SIZE 32768
+#define STR_BUFFER_SIZE 65536
 
 #define ERR(X) printf("ERR: %s\n",X);exit(1)
 
