@@ -5,12 +5,8 @@ Status](https://travis-ci.org/westrik/matttorrent.svg?branch=master)](https://tr
 
 ## About
 
-`matttorrent` is a rudimentary BitTorrent client I'm working on to get better at 
-writing systems code (multi-threading, event-driven programming, networking,
-etc.).
-
-Not currently functional.
-Testing on OS X 10.11 and Ubuntu 12.04.
+`matttorrent` is a simple BitTorrent client.
+Not working yet.
 
 
 ## Build
@@ -37,7 +33,7 @@ Run:
 - [x] parse bencode
 - [x] parse torrent file
 - [x] connect to tracker, parse bencoded response
-- [~] connect to peers
+- [ ] connect to peers
   - [ ] handshake 
 - [ ] message passing
   - [ ] bitfield, have
