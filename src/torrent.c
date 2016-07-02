@@ -132,7 +132,6 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
         strlen(metainfo->pieces)          // number of pieces we need
     );
 
-    printf("%s",url);
     free(_info_hash);
 
     // Make request
@@ -155,7 +154,7 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
         // Check for errors
         if(res != CURLE_OK)
         {
-            fprintf(stderr, "curl_easy_perform() failed: %s\n",
+            fprintf(stderr, "\nFailed: %s\n",
                 curl_easy_strerror(res));
             exit(1);
         }
@@ -166,6 +165,7 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
     // Parse bencoded response
     response = parse_bencode_dict((char*)chunk.memory);
 
+        // Report failures then die
     if (dict_find(response, "failure reason"))
     {
         printf("\nFailed, tracker says \"%s\"\n",dict_find(response, "failure reason")->element.c);
