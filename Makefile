@@ -40,7 +40,7 @@ $(OBJ_D):
 	$(CC) $(CFLAGS) $(INCL) -c $(SRC_D)/$*.c -o $(OBJ_D)/$@
 
 $(BIN) : $(COMMON) $(TARGET)
-	$(CC) -o $(BIN) $(COMMON_OUT) $(TARGET_OUT) $(LIB)
+	$(CC) $(LIB) -o $(BIN) $(COMMON_OUT) $(TARGET_OUT) 
 
 clean:
 	rm -rf $(OBJ_D)/* $(BIN) $(TEST_BIN)
