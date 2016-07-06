@@ -46,7 +46,7 @@ clean:
 	rm -rf $(OBJ_D)/* $(BIN) $(TEST_BIN)
 
 test: $(COMMON) $(TEST)
-	$(CC) -o $(TEST_BIN) $(COMMON_OUT) $(TEST_OUT)
+	$(CC) $(LIB) -o $(TEST_BIN) $(COMMON_OUT) $(TEST_OUT)
 	./$(TEST_BIN)
 
 run: all
