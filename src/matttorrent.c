@@ -12,13 +12,13 @@
  * Open torrent config file,
  * parse it 
  */
-void initialize(int argc, char** argv, FILE *torrentfile, t_conf *metainfo)
+void initialize(int argc, char** argv, FILE **torrentfile, t_conf **metainfo)
 {
     // Open torrent file
     if (argc == 2)
     {
-        torrentfile = fopen(argv[1],"r");
-        if (!torrentfile)
+        *torrentfile = fopen(argv[1],"r");
+        if (!(*torrentfile))
         {
             printf("Could not open '%s'\n", argv[1]);
             exit(1);
@@ -29,8 +29,9 @@ void initialize(int argc, char** argv, FILE *torrentfile, t_conf *metainfo)
         printf("Usage: %s torrent_file\n", argv[0]);
         exit(1);
     }
+
     // Initialize
-    metainfo = parse_torrent_file(torrentfile);
+    *metainfo = parse_torrent_file(*torrentfile);
 }
 
 /**
@@ -40,19 +41,32 @@ void initialize(int argc, char** argv, FILE *torrentfile, t_conf *metainfo)
 b_dict *contact_tracker(t_conf *metainfo, FILE *torrentfile)
 {
     b_dict* tracker_response;
+    b_dict_element* peers_c;
+    char* peers;
+    int peer_count;
 
     // Get peers from tracker
     printf("Contacting tracker... "); fflush(stdout);
     tracker_response = tracker_request(metainfo, torrentfile);
 
+    peer_count = count_linked_list(dict_find(tracker_response, "peers"));
     printf("OK\nDownloading %s with %d peers\n\n",
             metainfo->name,
-            count_linked_list(dict_find(tracker_response, "peers"))
+            peer_count
           );
 
-    char *x = dict_find(tracker_response, "peers")->element.c;
-    for (int i=0; i<strlen(x); i++)
-        printf("%.2x ", x[i]);
+    // Quit if tracker returns no peers 
+    if (peer_count == 0)
+    {
+        printf("Tracker returned no peers, quitting...\n");
+        exit(0);
+    }
+
+    peers_c = dict_find(tracker_response, "peers");
+    peers = peers_c->element.c;
+
+    for (int i=0; i<strlen(peers); i++)
+        printf("%.2x ", peers[i]);
     
     return tracker_response;
 }
@@ -94,19 +108,21 @@ void cleanup
 }
 
 
-/* ============================================================ */
+/* =================================== 
+                 RUN 
+   =================================== */
 
 int main(int argc, char** argv)
 {
-    FILE *torrentfile = NULL,
-         *output = NULL;
+    FILE   *torrentfile = NULL,
+           *output = NULL;
     t_conf *metainfo = NULL;
     b_dict *tracker_response = NULL;
     chunks *chunks = NULL;
 
     srand(time(NULL));
 
-    initialize(argc, argv, torrentfile, metainfo);
+    initialize(argc, argv, &torrentfile, &metainfo);
     tracker_response = contact_tracker(metainfo, torrentfile);
     chunks = download(tracker_response);
     save(metainfo, chunks, output);
