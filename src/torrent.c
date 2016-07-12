@@ -123,7 +123,7 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
     snprintf(
         url, BUFFER,
             "http%s?info_hash=%s&peer_id=%s&port=%d&left=%lu"
-            "&uploaded=0&downloaded=0supportcrypto=0"
+            "&uploaded=0&downloaded=0&supportcrypto=0"
             "&compact=1&event=started",
         strstr(metainfo->announce,"://"), // split on :// (so udp:// works)
         _info_hash,                       // SHA1 hash of info dictionary
@@ -165,11 +165,36 @@ b_dict* tracker_request(t_conf* metainfo, FILE* torrent_f)
     // Parse bencoded response
     response = parse_bencode_dict((char*)chunk.memory);
 
-        // Report failures then die
+    // Report specific failures
     if (dict_find(response, "failure reason"))
     {
         printf("\nFailed, tracker says \"%s\"\n",dict_find(response, "failure reason")->element.c);
         exit(1);
+    }
+
+    // Check peers 
+	b_dict_element* peers_d = dict_find(response, "peers");
+    if (NULL == peers_d)
+    {
+        printf("\nFailed: unknown reason\n");
+        exit(1);
+    }
+    else 
+    {
+		int peer_count = -1;
+		if (peers_d->type == STRING)
+		{
+			peer_count = strlen(peers_d->element.c ) / 6;
+		}
+		else
+		{
+			peer_count = count_linked_list(peers_d);
+		}
+
+		if (peer_count == 0)
+		{
+			ERR("\nFailed: no peers returned\n");
+		}
     }
 
     return response;

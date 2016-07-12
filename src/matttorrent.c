@@ -1,3 +1,9 @@
+/* ======================================\
+ | matttorrent                           |
+ | Simple event-driven BitTorrent client |
+ | Matthew Westrik                       |
+ \ =====================================*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -12,7 +18,13 @@
  * Open torrent config file,
  * parse it 
  */
-void initialize(int argc, char** argv, FILE **torrentfile, t_conf **metainfo)
+void initialize
+    (
+    int argc, 
+    char** argv, 
+    FILE **torrentfile, 
+    t_conf **metainfo
+    )
 {
     // Open torrent file
     if (argc == 2)
@@ -36,37 +48,37 @@ void initialize(int argc, char** argv, FILE **torrentfile, t_conf **metainfo)
 
 /**
  * Contact the torrent tracker specified in the config file,
- * parse and save response in a dictionary.
+ * parse and save response in a dictionary,
+ * print file name and number of peers returned by tracker.
  */
 b_dict *contact_tracker(t_conf *metainfo, FILE *torrentfile)
 {
     b_dict* tracker_response;
-    b_dict_element* peers_c;
-    char* peers;
+    b_dict_element* peers_d;
+    char* peers_c;
     int peer_count;
 
     // Get peers from tracker
     printf("Contacting tracker... "); fflush(stdout);
     tracker_response = tracker_request(metainfo, torrentfile);
 
-    peer_count = count_linked_list(dict_find(tracker_response, "peers"));
+    // Count number of peers
+    peers_d = dict_find(tracker_response, "peers");
+    if (peers_d->type == STRING)
+    {
+        peers_c = peers_d->element.c;
+        peer_count = strlen(peers_c) / 6;
+    }
+    else
+    {
+        peer_count = count_linked_list(peers_d);
+    }
+
+    // Print info about torrent (name, num peers)
     printf("OK\nDownloading %s with %d peers\n\n",
             metainfo->name,
             peer_count
           );
-
-    // Quit if tracker returns no peers 
-    if (peer_count == 0)
-    {
-        printf("Tracker returned no peers, quitting...\n");
-        exit(0);
-    }
-
-    peers_c = dict_find(tracker_response, "peers");
-    peers = peers_c->element.c;
-
-    for (int i=0; i<strlen(peers); i++)
-        printf("%.2x ", peers[i]);
     
     return tracker_response;
 }
@@ -101,10 +113,16 @@ void cleanup
     chunks *chunks
     )
 {
-
     fclose(torrentfile);
     fclose(output);
-    // ...
+
+    free(metainfo->announce);
+    free(metainfo->name);
+    free(metainfo->pieces);
+
+    dict_destroy(tracker_response);
+
+    free_chunks(chunks);
 }
 
 

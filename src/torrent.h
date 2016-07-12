@@ -6,6 +6,7 @@
 #define PEER_ID "-M30001-"
 #define BUFFER 512
 #define DEFAULT_PORT 6886
+#define MAX_PEER 50
 
 /* ==========================================
  * Data structure declarations
