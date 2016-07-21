@@ -1,7 +1,7 @@
 language: c
 
 before_script:
-  # install libuv >= 1.0.0 (optionally required for building / testing libh2o)
+  # install libuv >= 1.0.0 
   - curl -L https://github.com/libuv/libuv/archive/v1.0.0.tar.gz | tar xzf -
   - (cd libuv-1.0.0 && ./autogen.sh && ./configure --prefix=/usr && make && sudo make install)
 

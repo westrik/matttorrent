@@ -89,6 +89,8 @@ chunks *download(b_dict *tracker_response)
 
     }
 
+    fflush(stdout);
+
     // using list of peers, handshake with them all
     // then do some message passing to get chunks
 

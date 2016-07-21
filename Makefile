@@ -3,6 +3,7 @@ CFLAGS= -Wall -Wno-unused-function -pedantic -g
 
 SRC_D=src
 OBJ_D=obj
+INC_D=include
 
 COMMON=                                                                       \
 	torrent.o                                                                 \
@@ -22,7 +23,7 @@ LIB = -L/usr/local/opt/openssl/lib \
 		-I/usr/local/opt/openssl/include \
 		-lcurl -lssl -lcrypto -luv
 
-INCL = -I/usr/local/opt/openssl/include
+INCL = -I/usr/local/opt/openssl/include -I$(INC_D)
 
 BIN = matttorrent
 TEST_BIN = test

@@ -5,8 +5,8 @@ Status](https://travis-ci.org/westrik/matttorrent.svg?branch=master)](https://tr
 
 ## About
 
-`matttorrent` is a simple BitTorrent client.
-Not working yet.
+`matttorrent` is a simple event-driven BitTorrent client, implemented in C using
+libuv. 
 
 
 ## Build
