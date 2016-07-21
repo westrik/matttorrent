@@ -20,7 +20,7 @@ TARGET_OUT = $(addprefix $(OBJ_D)/,$(TARGET))
 TEST_OUT = $(addprefix $(OBJ_D)/,$(TEST))
 LIB = -L/usr/local/opt/openssl/lib \
 		-I/usr/local/opt/openssl/include \
-		-lcurl -lssl -lcrypto
+		-lcurl -lssl -lcrypto -luv
 
 INCL = -I/usr/local/opt/openssl/include
 

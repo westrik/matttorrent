@@ -11,6 +11,11 @@ Not working yet.
 
 ## Build
 
+Install libuv:
+````
+brew install --HEAD libuv
+````
+
 Compile:
 ````
 make
@@ -23,7 +28,7 @@ make test
 
 Run:
 ````
-./matttorrent data/test.torrent
+./matttorrent data/ubuntu.torrent
 ````
 
 
