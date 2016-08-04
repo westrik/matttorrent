@@ -9,6 +9,11 @@ typedef struct _peer
     int port;
 } peer;
 
+typedef struct 
+{
+    void* buffer;
+} peer_resp;
+
 /**
  * Take list of peers from tracker,
  * start communicating with them and downloading chunks.

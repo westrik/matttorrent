@@ -189,5 +189,5 @@ void parse_peers(b_dict *tracker_response, peer peers[MAX_PEER])
 
 peer_resp *handshake(char *peer_loc)
 {
-
+    return 0;
 }
