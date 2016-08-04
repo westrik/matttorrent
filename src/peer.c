@@ -70,32 +70,10 @@ chunks *download(b_dict *tracker_response)
 
     parse_peers(tracker_response, peers);
 
-    for (int i = 0; i<MAX_PEER; i++)
-    {
-        if (peers[i].ipv4[0] != 0)
-        {
-        printf("%d.%d.%d.%d:%d\n",
-            peers[i].ipv4[0],
-            peers[i].ipv4[1],
-            peers[i].ipv4[2],
-            peers[i].ipv4[3],
-            peers[i].port);
-
-            //handshake with peer
-            //do some message passing
-            //etc
-        }
-
-
-    }
-
-    fflush(stdout);
-
-    // using list of peers, handshake with them all
-    // then do some message passing to get chunks
-
+    // prepare event loop
     loop = uv_default_loop();
 
+    // wait for incoming connections
     uv_tcp_t server;
     uv_tcp_init(loop, &server);
 
@@ -109,6 +87,23 @@ chunks *download(b_dict *tracker_response)
     }
     uv_run(loop, UV_RUN_DEFAULT);
 
+
+    // connect and handshake to all peers
+    for (int i = 0; i<MAX_PEER; i++)
+    {
+        if (peers[i].ipv4[0] != 0)
+        {
+        printf("%d.%d.%d.%d:%d\n",
+            peers[i].ipv4[0],
+            peers[i].ipv4[1],
+            peers[i].ipv4[2],
+            peers[i].ipv4[3],
+            peers[i].port);
+
+            // connect to peer
+            // do handshake
+        }
+    }
 
     // set timer to re-request peer list (tracker response dictates time
     // interval to do this in)
@@ -125,6 +120,10 @@ chunks *download(b_dict *tracker_response)
     }
     printf("\n");
 
+
+    // start downloading using message passing
+    // ...
+    
 }
 
 void parse_peers(b_dict *tracker_response, peer peers[MAX_PEER])
@@ -188,8 +187,7 @@ void parse_peers(b_dict *tracker_response, peer peers[MAX_PEER])
     }
 }
 
-/*peer_resp *handshake(char *peer_loc)
+peer_resp *handshake(char *peer_loc)
 {
 
 }
-*/
